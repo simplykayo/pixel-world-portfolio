@@ -29,6 +29,7 @@ function App(){
  const [content,setContent]=useState(starter);
  useEffect(()=>{fetch("/api/content").then(r=>r.ok?r.json():null).then(d=>{if(d)setContent({...starter,...d})}).catch(()=>{});},[]);
  const first=content.name.split(" ")[0]||content.name;
+ if(location.pathname.startsWith("/admin"))return <Admin/>;
  return <main className="site-shell">
   <header className="topbar"><a className="brand" href="#"><PixelMark/><span>{content.name}<small>PORTFOLIO / 2026</small></span></a><nav><a href="#about">About</a><a href="#work">Work</a><a href="#toolkit">Toolkit</a><a href="#contact">Contact</a></nav><a className="admin-link" href="/admin"><LockKeyhole size={14}/> Edit site</a></header>
   <section className="hero"><div className="hero-copy"><div className="eyebrow"><span/> INDEPENDENT CREATIVE PORTFOLIO</div><h1>Hi, I'm <em>{first}.</em><br/>I make things<br/>for the <span className="pixel-word">digital</span> world.</h1><p>{content.intro}</p><a className="hero-link" href="#work">Explore selected work <ArrowDownRight size={17}/></a><div className="hero-meta"><span>BASED IN THE WORLD</span><span>AVAILABLE FOR GOOD IDEAS <i/></span></div></div><PixelArt/></section>
