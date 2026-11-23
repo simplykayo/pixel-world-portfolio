@@ -1,69 +1,46 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { ArrowDownRight, ArrowLeft, ArrowUpRight, Github, Globe2, Mail, Map, Music2, Sparkles, X, LockKeyhole, Save, Eye, LogOut, Plus, Trash2 } from "lucide-react";
+import { ArrowUpRight, Github, Globe2, Mail, X, LockKeyhole, Save, Eye, LogOut, Plus, Trash2, ArrowDownRight } from "lucide-react";
 import "./style.css";
 
 const starter = {
-  name: "Alex Morgan", role: "Creative developer & curious builder",
-  intro: "I make thoughtful digital experiences, one little pixel at a time.",
-  about: "A curious builder who loves turning ideas into useful, playful things. This world is a small map of what I do and what I am learning.",
-  skills: ["JavaScript","React","UI design","CSS","Figma","Problem solving"],
+  name: "Alex Morgan", role: "Designer, developer & maker",
+  intro: "I build thoughtful things for the web, with a soft spot for pixels, details and the little moments that make a project feel personal.",
+  about: "I'm a curious creative who enjoys shaping ideas into useful, considered digital experiences. This is a collection of things I've made, skills I'm developing and a few steps along the way.",
+  skills: ["JavaScript","React","Interface design","CSS","Figma","Creative coding"],
   projects: [
     {title:"Little Weather",description:"A friendly weather dashboard with a calm, focused interface.",tags:["React","API"],link:"#"},
-    {title:"Pixel Notes",description:"A tiny space for collecting thoughts and keeping ideas moving.",tags:["JavaScript","CSS"],link:"#"},
-    {title:"Open Source",description:"Small experiments, useful fixes and things shared with the community.",tags:["GitHub","Learning"],link:"#"}
+    {title:"Pixel Notes",description:"A small space for collecting thoughts and keeping ideas moving.",tags:["JavaScript","CSS"],link:"#"},
+    {title:"Open Source",description:"Experiments, useful fixes and things shared with the community.",tags:["GitHub","Learning"],link:"#"}
   ],
   journey: [
-    {year:"2024",title:"The beginning",description:"Started exploring how the web works."},
-    {year:"2025",title:"Building things",description:"Shipped small projects and learned by experimenting."},
-    {year:"2026",title:"Growing forward",description:"Making more thoughtful, accessible experiences."}
+    {year:"2024",title:"Curiosity turned into code",description:"Started exploring how the web works and making small experiments."},
+    {year:"2025",title:"Learning by building",description:"Created personal projects, tried new tools and found a creative rhythm."},
+    {year:"2026",title:"Making with intention",description:"Focusing on thoughtful details, accessible design and better experiences."}
   ],
   socials:[{label:"GitHub",url:"https://github.com/"},{label:"Email",url:"mailto:hello@example.com"}],
   theme:"meadow"
 };
 
-const zones = [
-  {id:"spawn",name:"Spawn point",hint:"Start here",x:49,y:69,icon:"✦",desc:"A little introduction"},
-  {id:"character",name:"Character hut",hint:"Who am I?",x:22,y:43,icon:"☺",desc:"A little about me"},
-  {id:"inventory",name:"Inventory",hint:"My toolkit",x:75,y:40,icon:"▣",desc:"Skills & tools"},
-  {id:"quests",name:"Quest board",hint:"Things I've made",x:79,y:72,icon:"▤",desc:"Selected projects"},
-  {id:"journey",name:"Trail marker",hint:"The journey",x:29,y:78,icon:"⚑",desc:"Milestones & experience"},
-  {id:"mailbox",name:"Mailbox",hint:"Say hello",x:52,y:25,icon:"✉",desc:"Find me elsewhere"}
-];
-
-function PixelTree({x,y,scale=1}) { return <div className="tree" style={{left:x+"%",top:y+"%",transform:"translate(-50%,-50%) scale("+scale+")"}}><i/><b/><em/></div>; }
-function World({content,onZone}) {
-  return <div className="world" aria-label="Interactive pixel-art world">
-    <div className="sun"/><div className="cloud cloud-a"/><div className="cloud cloud-b"/>
-    <div className="mountains"/><div className="water"/><div className="path"/>
-    <div className="island island-a"/><div className="island island-b"/>
-    <PixelTree x={12} y={56} scale={1.05}/><PixelTree x={36} y={30}/><PixelTree x={91} y={53} scale={1.2}/><PixelTree x={65} y={85} scale={.85}/><PixelTree x={12} y={85} scale={.8}/>
-    <div className="flower f1">✿</div><div className="flower f2">✿</div><div className="flower f3">✿</div>
-    <div className="cabin cabin-left"><span>⌂</span></div><div className="cabin cabin-right"><span>⌂</span></div>
-    <div className="world-sign">WELCOME TO MY LITTLE WORLD</div>
-    {zones.map(z=><button key={z.id} className={"zone zone-"+z.id} style={{left:z.x+"%",top:z.y+"%"}} onClick={()=>onZone(z.id)} aria-label={"Explore "+z.name}>
-      <span className="zone-icon">{z.icon}</span><span className="zone-label">{z.name}</span><small>{z.hint}</small>
-    </button>)}
-    <div className="player" aria-hidden="true"><span className="player-head"/><span className="player-body"/><span className="player-shadow"/></div>
-    <div className="world-coords">WORLD 01 · SUNNY MEADOW</div>
-  </div>;
+function PixelMark(){return <span className="pixel-mark" aria-hidden="true"><i/><i/><i/><i/><i/><i/><i/><i/><i/></span>}
+function PixelArt(){return <div className="pixel-art" aria-hidden="true"><div className="art-sun"/><div className="art-cloud cloud-one"/><div className="art-cloud cloud-two"/><div className="art-hill hill-back"/><div className="art-hill hill-front"/><div className="art-house"><i/><b/><span/></div><div className="art-tree tree-one"><i/><b/></div><div className="art-tree tree-two"><i/><b/></div><div className="art-flower flower-one">✿</div><div className="art-flower flower-two">✿</div><div className="art-caption">A LITTLE PLACE ON THE INTERNET</div></div>}
+function SectionLabel({number,children}){return <div className="section-label"><span>{number}</span>{children}</div>}
+function App(){
+ const [content,setContent]=useState(starter);
+ useEffect(()=>{fetch("/api/content").then(r=>r.ok?r.json():null).then(d=>{if(d)setContent({...starter,...d})}).catch(()=>{});},[]);
+ const first=content.name.split(" ")[0]||content.name;
+ return <main className="site-shell">
+  <header className="topbar"><a className="brand" href="#"><PixelMark/><span>{content.name}<small>PORTFOLIO / 2026</small></span></a><nav><a href="#about">About</a><a href="#work">Work</a><a href="#toolkit">Toolkit</a><a href="#contact">Contact</a></nav><a className="admin-link" href="/admin"><LockKeyhole size={14}/> Edit site</a></header>
+  <section className="hero"><div className="hero-copy"><div className="eyebrow"><span/> INDEPENDENT CREATIVE PORTFOLIO</div><h1>Hi, I'm <em>{first}.</em><br/>I make things<br/>for the <span className="pixel-word">digital</span> world.</h1><p>{content.intro}</p><a className="hero-link" href="#work">Explore selected work <ArrowDownRight size={17}/></a><div className="hero-meta"><span>BASED IN THE WORLD</span><span>AVAILABLE FOR GOOD IDEAS <i/></span></div></div><PixelArt/></section>
+  <section className="intro-strip"><span>01 — A LITTLE INTRODUCTION</span><p>Good ideas deserve thoughtful design, a little personality, and room to grow.</p><span>✳ EST. 2024</span></section>
+  <section className="content-section about-section" id="about"><SectionLabel number="02">A BIT ABOUT ME</SectionLabel><div className="about-grid"><h2>Curious by nature.<br/><em>Creative by choice.</em></h2><div><p className="section-lead">{content.role}</p><p>{content.about}</p><a className="text-link" href="#contact">A little more about me <ArrowUpRight size={15}/></a></div></div></section>
+  <section className="content-section work-section" id="work"><SectionLabel number="03">SELECTED WORK</SectionLabel><div className="section-heading"><h2>Things I've<br/><em>put into the world.</em></h2><p>A few projects, experiments and ideas brought to life. Each one taught me something new.</p></div><div className="project-grid">{content.projects.map((p,i)=><article className={"work-card work-card-"+(i%3)} key={i}><div className="project-art"><span className="art-index">0{i+1}</span><div className="project-pixel"><i/><b/><em/></div><span className="art-type">{(p.tags||[])[0]||"PERSONAL PROJECT"}</span></div><div className="work-info"><div className="work-title-row"><h3>{p.title}</h3>{p.link&&p.link!=="#"&&<a href={p.link} target="_blank" rel="noreferrer" aria-label={"Open "+p.title}><ArrowUpRight size={18}/></a>}</div><p>{p.description}</p><div className="tags">{(p.tags||[]).map(t=><span key={t}>{t}</span>)}</div></div></article>)}</div></section>
+  <section className="content-section toolkit-section" id="toolkit"><SectionLabel number="04">THE TOOLKIT</SectionLabel><div className="toolkit-grid"><h2>Tools I use.<br/><em>Skills I grow.</em></h2><div className="skill-cloud">{content.skills.map((s,i)=><span key={s}><b>0{i+1}</b>{s}</span>)}</div></div></section>
+  <section className="content-section journey-section"><SectionLabel number="05">A WORK IN PROGRESS</SectionLabel><h2>The journey<br/><em>so far.</em></h2><div className="timeline">{content.journey.map((j,i)=><article className="milestone" key={i}><span>{j.year}</span><div><h3>{j.title}</h3><p>{j.description}</p></div><b>✳</b></article>)}</div></section>
+  <section className="contact-section" id="contact"><div className="contact-pixel">✳</div><SectionLabel number="06">SAY HELLO</SectionLabel><h2>Have something<br/>good in <em>mind?</em></h2><p>I'm always happy to hear about interesting ideas, collaborations or just to have a chat.</p><div className="contact-links">{content.socials.map((s,i)=><a key={i} href={s.url} target={s.url.startsWith("mailto:")?"_self":"_blank"} rel="noreferrer">{s.label==="Email"?<Mail size={17}/>:s.label==="GitHub"?<Github size={17}/>:<Globe2 size={17}/>} {s.label}<ArrowUpRight size={15}/></a>)}</div></section>
+  <footer className="footer"><a className="brand" href="#"><PixelMark/><span>{content.name}<small>MADE WITH CARE</small></span></a><span>© {new Date().getFullYear()} {content.name}. ALL RIGHTS RESERVED.</span><a href="#top">BACK TO TOP ↑</a></footer>
+ </main>;
 }
-
-function Section({id,content,onClose}) {
-  const title = {spawn:"Welcome, explorer!",character:"The character",inventory:"My inventory",quests:"Quest board",journey:"The journey",mailbox:"Send a signal"}[id];
-  return <div className="overlay" role="dialog" aria-modal="true" aria-labelledby="panel-title" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}>
-    <article className="panel"><button className="close" onClick={onClose} aria-label="Close"><X size={19}/></button>
-      <div className="panel-kicker">✦ FIELD NOTES / {id.toUpperCase()}</div><h2 id="panel-title">{title}</h2>
-      {id==="spawn"&&<><p className="lead">{content.intro}</p><p>Pick a place on the map and explore. Every little spot has something to share.</p><button className="primary" onClick={()=>onClose()}>Explore the world <ArrowDownRight size={16}/></button></>}
-      {id==="character"&&<><div className="avatar">☺</div><h3>{content.name}</h3><p className="lead">{content.role}</p><p>{content.about}</p><div className="note">CURRENT STATUS <b>Curious and creating</b></div></>}
-      {id==="inventory"&&<><p className="lead">Tools I reach for and skills I'm growing.</p><div className="skill-grid">{content.skills.map((s,i)=><span key={i} className="skill"><i>✦</i>{s}</span>)}</div></>}
-      {id==="quests"&&<div className="project-list">{content.projects.map((p,i)=><div className="project" key={i}><div className="project-top"><span>QUEST {String(i+1).padStart(2,"0")}</span><span>✧</span></div><h3>{p.title}</h3><p>{p.description}</p><div className="tags">{(p.tags||[]).map(t=><small key={t}>{t}</small>)}</div>{p.link&&p.link!=="#"&&<a href={p.link} target="_blank" rel="noreferrer">View project <ArrowUpRight size={14}/></a>}</div>)}</div>}
-      {id==="journey"&&<div className="timeline">{content.journey.map((j,i)=><div className="milestone" key={i}><b>{j.year}</b><div><h3>{j.title}</h3><p>{j.description}</p></div></div>)}</div>}
-      {id==="mailbox"&&<><p className="lead">Have a question, an idea, or just want to say hello?</p><div className="social-list">{content.socials.map((s,i)=><a key={i} href={s.url} target={s.url.startsWith("mailto:")?"_self":"_blank"} rel="noreferrer"><span>{s.label==="Email"?<Mail size={17}/>:<Globe2 size={17}/>}</span>{s.label}<ArrowUpRight size={15}/></a>)}</div></>}
-    </article>
-  </div>;
-}
-
 function Admin() {
   const [password,setPassword]=useState(""); const [logged,setLogged]=useState(false); const [content,setContent]=useState(starter);
   const [status,setStatus]=useState(""); const [busy,setBusy]=useState(false);
@@ -73,8 +50,8 @@ function Admin() {
   async function save(publish=false){setBusy(true);setStatus("");try{const r=await fetch(publish?"/api/admin/publish":"/api/admin/content",{method:publish?"POST":"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(content)});if(!r.ok)throw new Error((await r.json()).error||"Could not save");setStatus(publish?"Published! Your live portfolio is updated.":"Draft saved.");}catch(e){setStatus(e.message)}finally{setBusy(false)}}
   async function logout(){await fetch("/api/admin/logout",{method:"POST"});setLogged(false);location.href="/"}
   const set=(key,value)=>setContent(c=>({...c,[key]:value}));
-  if(!logged)return <main className="admin-shell"><form className="login-card" onSubmit={login}><a className="back-link" href="/">← Back to world</a><div className="admin-mark"><LockKeyhole/></div><div className="panel-kicker">PRIVATE AREA</div><h1>Creator's cabin</h1><p>Sign in to update this little world.</p><label>Admin password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} autoComplete="current-password" required/></label>{status&&<p className="error">{status}</p>}<button className="primary wide" disabled={busy}>{busy?"Checking…":"Unlock dashboard"}</button></form></main>;
-  return <main className="admin-shell"><header className="admin-header"><a href="/" className="back-link">← View portfolio</a><button className="quiet-button" onClick={logout}><LogOut size={16}/> Sign out</button></header><div className="admin-content"><div className="panel-kicker">WORLD BUILDER / CONTROL ROOM</div><h1>Creator's cabin</h1><p className="admin-intro">Edit the words and details in your portfolio. Save a draft first, then publish when you're happy.</p>
+  if(!logged)return <main className="admin-shell"><form className="login-card" onSubmit={login}><a className="back-link" href="/">← Back to portfolio</a><div className="admin-mark"><LockKeyhole/></div><div className="panel-kicker">PRIVATE AREA</div><h1>Site editor</h1><p>Sign in to update the portfolio.</p><label>Admin password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} autoComplete="current-password" required/></label>{status&&<p className="error">{status}</p>}<button className="primary wide" disabled={busy}>{busy?"Checking…":"Unlock dashboard"}</button></form></main>;
+  return <main className="admin-shell"><header className="admin-header"><a href="/" className="back-link">← View live site</a><button className="quiet-button" onClick={logout}><LogOut size={16}/> Sign out</button></header><div className="admin-content"><div className="panel-kicker">PORTFOLIO CONTENT / EDITOR</div><h1>Site editor</h1><p className="admin-intro">Edit the words and details in your portfolio. Save a draft first, then publish when you're happy.</p>
     <section className="editor-card"><h2><span>01</span> Introduction</h2><label>Name<input value={content.name} onChange={e=>set("name",e.target.value)}/></label><label>Role<input value={content.role} onChange={e=>set("role",e.target.value)}/></label><label>Intro<textarea rows="2" value={content.intro} onChange={e=>set("intro",e.target.value)}/></label><label>About<textarea rows="4" value={content.about} onChange={e=>set("about",e.target.value)}/></label></section>
     <section className="editor-card"><h2><span>02</span> Skills & tools</h2><label>One skill per line<textarea rows="5" value={content.skills.join("\n")} onChange={e=>set("skills",e.target.value.split("\n").map(x=>x.trim()).filter(Boolean))}/></label></section>
     <section className="editor-card"><h2><span>03</span> Projects</h2>{content.projects.map((p,i)=><div className="repeat-editor" key={i}><div className="repeat-title">Quest {i+1}<button className="icon-button" onClick={()=>set("projects",content.projects.filter((_,n)=>n!==i))} aria-label="Delete project"><Trash2 size={15}/></button></div><label>Title<input value={p.title} onChange={e=>set("projects",content.projects.map((x,n)=>n===i?{...x,title:e.target.value}:x))}/></label><label>Description<textarea rows="2" value={p.description} onChange={e=>set("projects",content.projects.map((x,n)=>n===i?{...x,description:e.target.value}:x))}/></label><label>Tags (comma separated)<input value={(p.tags||[]).join(", ")} onChange={e=>set("projects",content.projects.map((x,n)=>n===i?{...x,tags:e.target.value.split(",").map(t=>t.trim()).filter(Boolean)}:x))}/></label><label>Project URL<input value={p.link||""} onChange={e=>set("projects",content.projects.map((x,n)=>n===i?{...x,link:e.target.value}:x))}/></label></div>)}<button className="add-button" onClick={()=>set("projects",[...content.projects,{title:"New project",description:"A short description.",tags:[],link:""}])}><Plus size={16}/> Add project</button></section>
@@ -84,17 +61,3 @@ function Admin() {
   </div></main>;
 }
 
-function App() {
-  const [content,setContent]=useState(starter); const [active,setActive]=useState("spawn"); const [showPanel,setShowPanel]=useState(false);
-  useEffect(()=>{fetch("/api/content").then(r=>r.ok?r.json():null).then(d=>{if(d)setContent({...starter,...d})}).catch(()=>{});},[]);
-  const zoneClick=id=>{setActive(id);setShowPanel(true)};
-  useEffect(()=>{const key=e=>{if(e.key==="Escape")setShowPanel(false)};window.addEventListener("keydown",key);return()=>window.removeEventListener("keydown",key)},[]);
-  if(location.pathname.startsWith("/admin"))return <Admin/>;
-  return <main className="site-shell"><header className="topbar"><a className="brand" href="#"><span className="brand-icon">✳</span> PIXEL WORLD <small>PORTFOLIO</small></a><div className="top-status"><i/> WORLD ONLINE <span>·</span> TAKE A LOOK AROUND</div><a className="admin-link" href="/admin"><LockKeyhole size={14}/> CREATOR LOGIN</a></header>
-    <section className="hero"><div className="hero-copy"><div className="eyebrow"><Sparkles size={14}/> A SMALL CORNER OF THE INTERNET</div><h1>Hey, I'm <em>{content.name.split(" ")[0]}.</em></h1><p>{content.role}. <span>Welcome to my world.</span></p><div className="hero-hint"><span className="hint-key">CLICK</span> any location to explore <ArrowDownRight size={16}/></div></div><div className="hero-stamp"><div>EST.</div><strong>20<br/>26</strong><small>MADE WITH<br/>CURIOSITY</small></div></section>
-    <section className="map-wrap"><div className="map-heading"><div><span className="section-index">01 / THE MAP</span><h2>Explore my world</h2></div><div className="map-legend"><span><i className="legend-dot"/> INTERACTIVE LOCATIONS</span><span><Map size={14}/> 6 PLACES TO FIND</span></div></div><World content={content} onZone={zoneClick}/><div className="map-footer"><span>↳ MOVE YOUR CURSOR · FIND A PLACE · OPEN A STORY</span><span>NO WRONG WAY TO EXPLORE <b>✦</b></span></div></section>
-    <footer className="footer"><span>© {new Date().getFullYear()} {content.name} · BUILT ONE PIXEL AT A TIME</span><span>HAND-CRAFTED WITH <b>♥</b> AND A LITTLE CSS</span></footer>
-    {showPanel&&<Section id={active} content={content} onClose={()=>setShowPanel(false)}/>}
-  </main>;
-}
-createRoot(document.getElementById("root")).render(<App/>);
