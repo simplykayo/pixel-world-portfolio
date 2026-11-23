@@ -2,7 +2,5 @@ name = "pixel-world-portfolio"
 compatibility_date = "2026-11-24"
 pages_build_output_dir = "dist"
 
-[[d1_databases]]
-binding = "DB"
-database_name = "pixel-world-content"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+# Add the D1 binding named DB in Cloudflare Pages → Settings → Functions.
+# Keep the database ID in the Cloudflare dashboard; do not commit secrets here.
