@@ -62,3 +62,4 @@ function Admin() {
   </div></main>;
 }
 
+createRoot(document.getElementById("root")).render(<App />);
