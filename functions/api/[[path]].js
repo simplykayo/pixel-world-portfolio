@@ -93,7 +93,7 @@ async function login(request,env) {
     return json({error:"That password didn't match."},401);
   }
   await env.DB.prepare("DELETE FROM login_attempts WHERE ip_hash=?").bind(ipHash).run();
-  return json({ok:true},{status:200,headers:{"Set-Cookie":cookie(await makeSession(env))}});
+  return json({ok:true},200,{"Set-Cookie":cookie(await makeSession(env))});
 }
 export async function onRequest({request,env}) {
   const path=new URL(request.url).pathname;
@@ -106,7 +106,7 @@ export async function onRequest({request,env}) {
   if(path==="/api/admin/session"&&request.method==="GET")return json({authenticated:await authorized(request,env)});
   if(path==="/api/admin/logout"&&request.method==="POST") {
     if(!sameOrigin(request))return json({error:"Request origin rejected."},403);
-    return json({ok:true},{headers:{"Set-Cookie":cookie("",0)}});
+    return json({ok:true},200,{"Set-Cookie":cookie("",0)});
   }
   if(path.startsWith("/api/admin/")) {
     if(!await authorized(request,env))return json({error:"Please sign in again."},401);
