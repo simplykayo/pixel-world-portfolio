@@ -28,7 +28,7 @@ The public portfolio works locally with starter content. The admin API requires 
 4. Create a D1 database named `pixel-world-content`.
 5. In the Pages project's **Settings → Functions → D1 database bindings**, add binding name `DB` and select that database.
 6. Set `ADMIN_PASSWORD_HASH` and `SESSION_SECRET` as production secrets in the Pages project's **Settings → Variables and Secrets**.
-7. Update `database_name` and `database_id` in `wrangler.toml` with your D1 details. Keep the binding name exactly `DB`.
+7. In the Cloudflare Pages project, add the D1 binding named `DB` and select your database. The binding name must be exactly `DB`; the database ID stays in the Cloudflare dashboard.
 8. Apply the schema to the database:
    ```bash
    npx wrangler d1 execute pixel-world-content --remote --file=database/schema.sql
