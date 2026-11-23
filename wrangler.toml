@@ -1,5 +1,5 @@
 name = "pixel-world-portfolio"
-compatibility_date = "2026-11-24"
+compatibility_date = "2026-11-23"
 pages_build_output_dir = "dist"
 
 # Add the D1 binding named DB in Cloudflare Pages → Settings → Functions.
